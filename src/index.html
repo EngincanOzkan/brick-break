@@ -2,10 +2,20 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Template App !</title>
+        <link rel="stylesheet" href="style/index.css">
+        <title>Brick Break Game!</title>
     </head>
     <body>
-        <h1>Welcome Template App</h1>
-        <script src="./index.ts"></script>
+        <div id="main" class="main">
+            <canvas id="playField" width="1000" height="600"></canvas>
+            <img id="background" src="./images/background.png"></img>
+            <div id="display">
+                <div id="score"></div>
+                <button id="start">Start</button>
+                <div id="info">Press play!</div>
+              </div>
+            </div>
+        </div>
+        <script type="module" src="./index.ts"></script>
     </body>
 </html>
