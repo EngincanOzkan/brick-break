@@ -3,6 +3,7 @@ import { CanvasView } from "./view/CanvasView";
 import { Ball } from "./sprites/Ball";
 import { Brick } from "./sprites/Brick";
 import { Paddle } from "./sprites/Paddle";
+import { Collision } from "./Collision";
 
 //images
 import PADDLE_IMAGE from "./images/paddle.png";
@@ -39,7 +40,8 @@ function gameLoop(
     view: CanvasView,
     bricks: Brick[],
     paddle: Paddle,
-    ball: Ball
+    ball: Ball,
+    collision: Collision
 ){
     view.clear();
     view.drawBricks(bricks);
@@ -49,6 +51,23 @@ function gameLoop(
     // Move Ball
     ball.moveBall();
 
+    collision.checkBallCollision(ball, paddle, view);
+    var colliding = collision.isCollidingBricks(ball, bricks); 
+
+    if(colliding)
+    {
+        score += 1;
+        view.drawScore(score);
+    }
+
+    console.log("ball pos y : " + ball.pos.y + " > " + view.canvas.height + " = " + (ball.pos.y  > view.canvas.height))
+    // Game Over when ball leaves playField
+    if (ball.pos.y > view.canvas.height) gameOver = true;
+    // If game won, set gameOver and display win
+    if (bricks.length === 0) return setGameWin(view);
+    // Return if gameover and don't run the requestAnimationFrame
+    if (gameOver) return setGameOver(view); 
+
     // move paddle and check so it won't exit the playfield
     if(
         (paddle.isMovingLeft && paddle.pos.x > 0) || 
@@ -57,7 +76,7 @@ function gameLoop(
         paddle.movePaddle();
     }
 
-    requestAnimationFrame(() => gameLoop(view, bricks, paddle, ball));
+    requestAnimationFrame(() => gameLoop(view, bricks, paddle, ball, collision));
 }
 
 function startGame(view: CanvasView) {
@@ -65,6 +84,9 @@ function startGame(view: CanvasView) {
     score = 0;
     view.drawInfo('');
     view.drawScore(0);
+    // create a collision instance
+    const collision = new Collision();
+
     // create all bricks
     const bricks = createBricks();
 
@@ -91,7 +113,7 @@ function startGame(view: CanvasView) {
         PADDLE_IMAGE
     );
 
-    gameLoop(view, bricks, paddle, ball);
+    gameLoop(view, bricks, paddle, ball, collision);
 }
 
 //Create a new view
