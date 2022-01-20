@@ -1,5 +1,5 @@
 # brick-break
-cd ./brick-break
-npm install
-npm start
+cd ./brick-break <br />
+npm install <br />
+npm start <br />
 
